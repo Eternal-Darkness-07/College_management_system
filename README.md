@@ -1,4 +1,4 @@
-##Please Run these Queries before running project
+<h2>Please Run these Queries before running project</h2>
 
 CREATE TABLE `courses` (
   `course_id` int NOT NULL AUTO_INCREMENT,
