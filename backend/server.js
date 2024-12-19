@@ -24,6 +24,8 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+app.use(cors({ origin: 'https://college-management-system-r4wh9zs8g.vercel.app'}))
+
 // Database connection
 connection.connect((err) => {
     if (err) {
