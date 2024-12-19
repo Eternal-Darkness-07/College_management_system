@@ -1,6 +1,6 @@
 <h2>Please Run these Queries before running project</h2>
 
-CREATE TABLE `courses` (
+CREATE TABLE `course` (
   `course_id` int NOT NULL AUTO_INCREMENT,
   `course_name` varchar(255) NOT NULL,
   `department_id` int NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE `courses` (
   CONSTRAINT `courses_ibfk_2` FOREIGN KEY (`instructor_id`) REFERENCES `instructors` (`instructor_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `departments` (
+CREATE TABLE `department` (
   `department_id` int NOT NULL AUTO_INCREMENT,
   `department_name` varchar(255) NOT NULL,
   `head_instructor_id` int DEFAULT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `departments` (
   CONSTRAINT `departments_ibfk_1` FOREIGN KEY (`head_instructor_id`) REFERENCES `instructors` (`instructor_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `enrollments` (
+CREATE TABLE `enrollment` (
   `enrollment_id` int NOT NULL AUTO_INCREMENT,
   `student_id` int NOT NULL,
   `course_id` int NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE `enrollments` (
   CONSTRAINT `enrollments_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `instructors` (
+CREATE TABLE `instructor` (
   `instructor_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE `instructors` (
   PRIMARY KEY (`instructor_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `students` (
+CREATE TABLE `student` (
   `student_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `enrollment_number` varchar(255) NOT NULL,
