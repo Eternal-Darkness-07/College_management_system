@@ -1,7 +1,7 @@
 //api.js
 import axios from "axios";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "https://college-management-system-qpu6.onrender.com";
 
 export const countInstructors = () => axios.get(`${API_URL}/admin/countInstructors`).then(res => res.data);
 export const countCourses = () => axios.get(`${API_URL}/admin/countCourses`).then(res => res.data);
