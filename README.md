@@ -1,4 +1,3 @@
-Visit:- https://college-management-system-beta.vercel.app/
-for admin panel:-
- username = admin
- password = admin
+Visit:- https://college-management-system-beta.vercel.app/ </br> for admin panel:-
+ </br> username = admin
+</br>  password = admin
