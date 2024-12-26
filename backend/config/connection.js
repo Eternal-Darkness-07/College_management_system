@@ -13,66 +13,66 @@ const connection = mysql.createConnection({
 });
 
 const createTables = async () => {
-  const tables = [
+  const tables = {
+    instructor: `
+      CREATE TABLE IF NOT EXISTS instructor (
+        instructor_id varchar(7) NOT NULL,
+        name varchar(100) NOT NULL,
+        email varchar(100) NOT NULL,
+        password varchar(255) NOT NULL,
+        department_name varchar(10) NOT NULL,
+        PRIMARY KEY (instructor_id),
+        UNIQUE KEY email (email)
+      )`,
     
-    `CREATE TABLE IF NOT EXISTS instructor (
-      instructor_id varchar(7) NOT NULL,
-      name varchar(100) NOT NULL,
-      email varchar(100) NOT NULL,
-      password varchar(255) NOT NULL,
-      department_name varchar(10) NOT NULL,
-      PRIMARY KEY (instructor_id),
-      UNIQUE KEY email (email)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-      `,
-
-      `CREATE TABLE IF NOT EXISTS department (
+    department: `
+      CREATE TABLE IF NOT EXISTS department (
         department_name varchar(100) NOT NULL,
         head_id varchar(7) DEFAULT NULL,
         PRIMARY KEY (department_name),
-        KEY department_ibfk_1 (head_id),
-        CONSTRAINT department_ibfk_1 FOREIGN KEY (head_id) REFERENCES instructor (instructor_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;`,
+        FOREIGN KEY (head_id) REFERENCES instructor (instructor_id)
+      )`,
 
-    `CREATE TABLE IF NOT EXISTS course (
-      course_id varchar(10) NOT NULL,
-      course_name varchar(100) NOT NULL,
-      instructor_id varchar(7) DEFAULT NULL,
-      PRIMARY KEY (course_id),
-      KEY course_ibfk_1 (instructor_id),
-      CONSTRAINT course_ibfk_1 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id) ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;`,
+    course: `
+      CREATE TABLE IF NOT EXISTS course (
+        course_id varchar(10) NOT NULL,
+        course_name varchar(100) NOT NULL,
+        instructor_id varchar(7) DEFAULT NULL,
+        PRIMARY KEY (course_id),
+        FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id) ON DELETE CASCADE
+      )`,
 
-    `CREATE TABLE IF NOT EXISTS student (
-      student_id varchar(15) NOT NULL,
-      name varchar(100) NOT NULL,
-      password varchar(255) NOT NULL,
-      email varchar(100) NOT NULL,
-      PRIMARY KEY (student_id),
-      UNIQUE KEY email (email)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-`,
+    student: `
+      CREATE TABLE IF NOT EXISTS student (
+        student_id varchar(15) NOT NULL,
+        name varchar(100) NOT NULL,
+        password varchar(255) NOT NULL,
+        email varchar(100) NOT NULL,
+        PRIMARY KEY (student_id),
+        UNIQUE KEY email (email)
+      )`,
     
-    `CREATE TABLE IF NOT EXISTS enrollment (
-      enrollment_id int NOT NULL AUTO_INCREMENT,
-      student_id varchar(15) NOT NULL,
-      course_id varchar(10) NOT NULL,
-      PRIMARY KEY (enrollment_id),
-      KEY student_id (student_id),
-      KEY course_id (course_id),
-      CONSTRAINT enrollment_ibfk_1 FOREIGN KEY (student_id) REFERENCES student (student_id),
-      CONSTRAINT enrollment_ibfk_2 FOREIGN KEY (course_id) REFERENCES course (course_id)
-    ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-`
-  ];
+    enrollment: `
+      CREATE TABLE IF NOT EXISTS enrollment (
+        enrollment_id int NOT NULL AUTO_INCREMENT,
+        student_id varchar(15) NOT NULL,
+        course_id varchar(10) NOT NULL,
+        PRIMARY KEY (enrollment_id),
+        FOREIGN KEY (student_id) REFERENCES student (student_id),
+        FOREIGN KEY (course_id) REFERENCES course (course_id)
+      )`
+  };
 
-  for (const query of tables) {
-    try {
-      await connection.promise().query(query);
-      console.log('Table created successfully');
-    } catch (error) {
-      console.error('Error creating table:', error);
+  const defaultOptions = 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci';
+
+  try {
+    for (const [tableName, query] of Object.entries(tables)) {
+      await connection.promise().query(query + defaultOptions);
+      console.log(`Table ${tableName} created successfully`);
     }
+  } catch (error) {
+    console.error('Error creating tables:', error);
+    throw error; // Propagate error to connection handler
   }
 };
 
