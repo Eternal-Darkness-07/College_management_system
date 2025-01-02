@@ -10,7 +10,23 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors({ origin: "https://college-management-system-r4wh9zs8g.vercel.app" }));
+const allowedOrigins = [
+    "https://college-management-system-beta.vercel.app", 
+    "https://college-management-system-r4wh9zs8g.vercel.app"
+  ];
+
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true, // If you use cookies or authorization headers
+    })
+  );
 app.use(bodyParser.json());
 app.use(express.json());
 
