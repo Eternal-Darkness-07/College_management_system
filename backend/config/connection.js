@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import mysql from "mysql2";
+import mysql from "mysql2/promise";
 
 dotenv.config(); // Load environment variables from .env file
 

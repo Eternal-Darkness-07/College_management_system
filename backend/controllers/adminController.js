@@ -4,7 +4,6 @@ import connection from "../config/connection.js";
 export const countCourses = async (req, res) => {
   try {
     const [rows] = await connection
-      .promise()
       .query("SELECT COUNT(*) AS count FROM course");
     res.json(rows[0].count);
   } catch (err) {
@@ -15,8 +14,7 @@ export const countCourses = async (req, res) => {
 export const countInstructors = async (req, res) => {
   try {
     const [rows] = await connection
-      .promise()
-      .query("SELECT COUNT(*) AS count FROM instructor");
+.query("SELECT COUNT(*) AS count FROM instructor");
     res.json(rows[0].count);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -26,7 +24,6 @@ export const countInstructors = async (req, res) => {
 export const countStudents = async (req, res) => {
   try {
     const [rows] = await connection
-      .promise()
       .query("SELECT COUNT(*) AS count FROM student");
     res.json(rows[0].count);
   } catch (error) {
@@ -37,7 +34,6 @@ export const countStudents = async (req, res) => {
 export const featchInstructors = async (req, res) => {
   try {
     const [rows] = await connection
-      .promise()
       .query(
         "SELECT instructor_id, name, email, department_name FROM instructor"
       );
@@ -54,11 +50,9 @@ export const deleteInstructor = async (req, res) => {
 
     // First, update department head_id to "Yet to be appointed" where the head_id matches the instructor id
     const [rows] = await connection
-      .promise()
       .query("UPDATE department SET head_id = NULL WHERE head_id = ?", [id]);
     // Then, delete the instructor where instructor_id matches the provided id
     const [result] = await connection
-      .promise()
       .query("DELETE FROM instructor WHERE instructor_id = ?", [id]);
 
     res.status(200).json({ message: "Instructor deleted successfully." });
@@ -74,7 +68,6 @@ export const addInstructor = async (req, res) => {
 
     // Check if the instructor_id already exists
     const [instructorExists] = await connection
-      .promise()
       .query(
         "SELECT COUNT(*) AS count FROM instructor WHERE instructor_id = ?",
         [instructor_id]
@@ -86,7 +79,6 @@ export const addInstructor = async (req, res) => {
 
     // Add the new instructor to the instructor table
     await connection
-      .promise()
       .query(
         "INSERT INTO instructor (instructor_id, name, email, password, department_name) VALUES (?,?,?,?,?)",
         [instructor_id, name, email, password, department_name]
@@ -103,7 +95,7 @@ export const updateInstructor = async (req, res) => {
   try {
     const { id } = req.params; // Get the instructor id from the request parameters
     const { instructor_id, name, email, department_name } = req.body;
-    await connection.promise().query(
+    await connection.query(
       `UPDATE instructor 
         SET 
         instructor_id =?,
@@ -124,7 +116,6 @@ export const getInstructorById = async (req, res) => {
   try {
     const { id } = req.params; // Get the instructor id from the request parameters
     const [rows] = await connection
-      .promise()
       .query(
         "SELECT instructor_id, name, email, department_name FROM instructor WHERE instructor_id =?",
         [id]
@@ -141,7 +132,7 @@ export const getInstructorById = async (req, res) => {
 
 export const featchCourses = async (req, res) => {
   try {
-    const [rows] = await connection.promise().query(
+    const [rows] = await connection.query(
       `SELECT 
           course.course_id, 
           course.course_name, 
@@ -165,10 +156,8 @@ export const deleteCourse = async (req, res) => {
     const { id } = req.params;
     // Then, delete the instructor where instructor_id matches the provided id
     await connection
-      .promise()
       .query(`DELETE FROM enrollment WHERE course_id = ?`, [id]);
     const [result] = await connection
-      .promise()
       .query("DELETE FROM course WHERE course_id = ?", [id]);
 
     res.status(200).json({ message: "Instructor deleted successfully." });
@@ -184,7 +173,6 @@ export const addCourse = async (req, res) => {
 
     // Check if the instructor_id already exists
     const [CourseExists] = await connection
-      .promise()
       .query("SELECT COUNT(*) AS count FROM course WHERE course_id = ?", [
         course_id,
       ]);
@@ -195,7 +183,6 @@ export const addCourse = async (req, res) => {
 
     // Add the new instructor to the instructor table
     await connection
-      .promise()
       .query(
         `INSERT INTO course ( course_id, course_name, instructor_id) VALUES (?,?,?)`,
         [course_id, course_name, instructor_id]
@@ -212,7 +199,7 @@ export const updateCourse = async (req, res) => {
   try {
     const { id } = req.params; // Get the course id from the request parameters
     const { course_id, course_name, instructor_id } = req.body;
-    await connection.promise().query(
+    await connection.query(
       `UPDATE course 
         SET 
         course_id =?,
@@ -232,7 +219,6 @@ export const getCourseById = async (req, res) => {
   try {
     const { id } = req.params; // Get the course id from the request parameters
     const [rows] = await connection
-      .promise()
       .query(
         "SELECT course_id, course_name, instructor_id FROM course WHERE course_id =?",
         [id]
@@ -250,7 +236,7 @@ export const getCourseById = async (req, res) => {
 export const featchStudents = async (req, res) => {
   try {
     const [rows] = await connection
-      .promise()
+       
       .query(`SELECT student_id, name, email FROM student;`);
     res.json(rows);
   } catch (error) {
@@ -263,10 +249,10 @@ export const deleteStudent = async (req, res) => {
     const { id } = req.params;
     // Then, delete the instructor where instructor_id matches the provided id
     await connection
-      .promise()
+       
       .query(`DELETE FROM enrollment WHERE student_id = ?`, [id]);
     const [result] = await connection
-      .promise()
+       
       .query("DELETE FROM student WHERE student_id = ?", [id]);
 
     res.status(200).json({ message: "Student deleted successfully." });
@@ -282,7 +268,7 @@ export const addStudent = async (req, res) => {
 
     // Check if the instructor_id already exists
     const [StudentExists] = await connection
-      .promise()
+       
       .query("SELECT COUNT(*) AS count FROM student WHERE student_id = ?", [
         student_id,
       ]);
@@ -293,7 +279,7 @@ export const addStudent = async (req, res) => {
 
     // Add the new instructor to the instructor table
     await connection
-      .promise()
+       
       .query(
         `INSERT INTO student ( student_id, name, password, email) VALUES (?,?,?,?)`,
         [student_id, name, password, email]
@@ -310,7 +296,7 @@ export const updateStudent = async (req, res) => {
   try {
     const { id } = req.params; // Get the course id from the request parameters
     const { student_id, name, email } = req.body;
-    await connection.promise().query(
+    await connection .query(
       `UPDATE student 
         SET 
          student_id =?,
@@ -330,7 +316,7 @@ export const getStudentById = async (req, res) => {
   try {
     const { id } = req.params; // Get the course id from the request parameters
     const [rows] = await connection
-      .promise()
+       
       .query("SELECT student_id,name, email FROM student WHERE student_id =?", [
         id,
       ]); // Fetch the course details where the course_id matches the provided id
@@ -346,7 +332,7 @@ export const getStudentById = async (req, res) => {
 
 export const featchDepartments = async (req, res) => {
   try {
-    const [rows] = await connection.promise().query(
+    const [rows] = await connection .query(
       `SELECT 
                 department.department_name,  
                 department.head_id, 
@@ -370,7 +356,7 @@ export const deleteDepartment = async (req, res) => {
     const { id } = req.params;
     // Then, delete the instructor where instructor_id matches the provided id
     const [result] = await connection
-      .promise()
+       
       .query("DELETE FROM department WHERE department_name = ?", [id]);
 
     res.status(200).json({ message: "Department deleted successfully." });
@@ -386,7 +372,7 @@ export const addDepartment = async (req, res) => {
 
     // Check if the instructor_id already exists
     const [DepartmentExists] = await connection
-      .promise()
+       
       .query(
         "SELECT COUNT(*) AS count FROM department WHERE department_name = ?",
         [department_name]
@@ -398,7 +384,7 @@ export const addDepartment = async (req, res) => {
 
     // Add the new instructor to the instructor table
     await connection
-      .promise()
+       
       .query(
         `INSERT INTO department ( department_name, head_id) VALUES (?,?)`,
         [department_name, head_id]
@@ -415,7 +401,7 @@ export const updateDepartment = async (req, res) => {
   try {
     const { id } = req.params; // Get the course id from the request parameters
     const { department_name, head_id } = req.body;
-    await connection.promise().query(
+    await connection .query(
       `UPDATE department
         SET 
          department_name =?,
@@ -435,7 +421,6 @@ export const getDepartmentById = async (req, res) => {
     const { id } = req.params; // Get the course id from the request parameters
     console.log(id);
     const [rows] = await connection
-      .promise()
       .query("SELECT * FROM department WHERE department_name =?", [id]); // Fetch the course details where the course_id matches the provided id
     if (rows.length === 0) {
       return res.status(404).json({ error: "Department not found." });
